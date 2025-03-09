@@ -24,6 +24,7 @@
             gap: 15px;
             width: 100%;
             max-width: 400px;
+            position: relative;  /* Keep the elements in place */
         }
         video { 
             width: 100%; 
@@ -36,7 +37,10 @@
             margin-bottom: 10px;
         }
         canvas { 
-            display: none;
+            display: none;  /* Initially hide the canvas */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         .polaroid {
             position: relative;
