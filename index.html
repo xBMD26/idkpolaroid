@@ -65,6 +65,7 @@
             object-fit: contain;
             border-radius: 5px;
             margin-bottom: 0px; /* No margin between image and timestamp */
+            transition: transform 0.5s ease-in-out; /* Smooth transition for the flip */
         }
 
         .timestamp {
@@ -201,7 +202,7 @@
             const imgData = canvas.toDataURL('image/png');
             polaroidContainer.innerHTML = `
                 <div class="polaroid">
-                    <img src="${imgData}" alt="Captured Image">
+                    <img src="${imgData}" alt="Captured Image" id="polaroidImage">
                     <div class="timestamp">${new Date().toLocaleTimeString()}</div> <!-- Separate timestamp div -->
                 </div>
             `;
@@ -219,7 +220,7 @@
 
         function flipCamera() {
             isMirrored = !isMirrored;
-            video.style.transform = isMirrored ? "scaleX(-1)" : "scaleX(1)";
+            document.getElementById('polaroidImage').style.transform = isMirrored ? "scaleX(-1)" : "scaleX(1)";
         }
     </script>
 </body>
