@@ -14,8 +14,8 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            padding-top: 20px;  /* Add padding to the top */
-            padding-bottom: 20px;  /* Add padding to the bottom */
+            padding-top: 20px;  
+            padding-bottom: 20px;  
         }
         .container {
             display: flex;
@@ -47,14 +47,14 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px; /* Added padding below the image */
+            margin-bottom: 20px;
         }
         .polaroid img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             border-radius: 5px;
-            margin-bottom: 50px; /* Padding below the image */
+            margin-bottom: 20px;
         }
         .timestamp {
             position: absolute;
@@ -94,6 +94,7 @@
             <button onclick="takePicture()">Capture</button>
             <button id="download" style="display:none;">Download</button>
             <button onclick="flipCamera()">Flip Camera</button>
+            <button onclick="switchCamera()">Switch Camera</button> <!-- New button to switch cameras -->
         </div>
         <div id="polaroidContainer" style="display: none;"></div>
     </div>
@@ -104,10 +105,44 @@
         const downloadBtn = document.getElementById('download');
         const polaroidContainer = document.getElementById('polaroidContainer');
         let isMirrored = false;
+        let currentStream = null;
+        let currentDeviceId = null; // Stores the current camera device ID
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => video.srcObject = stream)
-            .catch(err => console.error("Camera access denied", err));
+        // Get user media with front camera by default
+        function startCamera(deviceId = null) {
+            const constraints = {
+                video: {
+                    facingMode: deviceId ? undefined : "environment", // Default to environment (rear)
+                    deviceId: deviceId ? { exact: deviceId } : undefined // Switch to specific camera if deviceId is provided
+                }
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    if (currentStream) {
+                        currentStream.getTracks().forEach(track => track.stop()); // Stop the current stream
+                    }
+                    video.srcObject = stream;
+                    currentStream = stream; // Store the new stream
+                })
+                .catch(err => console.error("Camera access denied", err));
+        }
+
+        // Switch between front and rear cameras
+        function switchCamera() {
+            navigator.mediaDevices.enumerateDevices()
+                .then(devices => {
+                    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                    const currentCameraIndex = videoDevices.findIndex(device => device.deviceId === currentDeviceId);
+                    const nextCameraIndex = (currentCameraIndex + 1) % videoDevices.length; // Get the next camera
+                    const nextDeviceId = videoDevices[nextCameraIndex].deviceId;
+                    currentDeviceId = nextDeviceId; // Update current device ID
+                    startCamera(nextDeviceId); // Start the camera with the new device
+                });
+        }
+
+        // Start the camera with the rear camera initially
+        startCamera();
 
         function takePicture() {
             const ctx = canvas.getContext('2d');
