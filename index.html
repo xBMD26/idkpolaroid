@@ -45,7 +45,7 @@
         .polaroid {
             position: relative;
             background: white;
-            padding: 20px;
+            padding: 20px 20px 40px 20px; /* Add padding only at the bottom to create space below the image */
             width: 100%;
             max-width: 300px;
             aspect-ratio: 3 / 4;
@@ -57,15 +57,14 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 40px; /* Add padding here to create space between image and timestamp */
         }
 
         .polaroid img {
             width: 100%;
-            height: 100%;
+            height: auto;
             object-fit: contain;
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 0px; /* No margin between image and timestamp */
         }
         .timestamp {
             position: absolute;
@@ -167,54 +166,53 @@
         startCamera();
 
         function takePicture() {
-    const ctx = canvas.getContext('2d');
-    const imgWidth = video.videoWidth;
-    const imgHeight = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            const imgWidth = video.videoWidth;
+            const imgHeight = video.videoHeight;
 
-    // Set canvas size dynamically to prevent overflow, with added padding
-    const canvasWidth = imgWidth + 40;
-    const canvasHeight = imgHeight + 50 + 50; // 50px padding between image and timestamp, plus 50px extra for timestamp
+            // Set canvas size dynamically to prevent overflow, with added padding
+            const canvasWidth = imgWidth + 40;
+            const canvasHeight = imgHeight + 50; // 50px padding between image and timestamp
 
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
 
-    // Draw white Polaroid frame
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            // Draw white Polaroid frame
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    if (isMirrored) {
-        ctx.translate(canvasWidth, 0);
-        ctx.scale(-1, 1);
-    }
+            if (isMirrored) {
+                ctx.translate(canvasWidth, 0);
+                ctx.scale(-1, 1);
+            }
 
-    // Apply 90s effect directly to the canvas
-    ctx.filter = "sepia(60%) contrast(1.2) brightness(0.9)";
-    ctx.drawImage(video, 20, 20, imgWidth, imgHeight);
+            // Apply 90s effect directly to the canvas
+            ctx.filter = "sepia(60%) contrast(1.2) brightness(0.9)";
+            ctx.drawImage(video, 20, 20, imgWidth, imgHeight);
 
-    // Add timestamp 50px below the image
-    ctx.fillStyle = "#7a5f43";
-    ctx.font = "20px monospace";
-    ctx.fillText(new Date().toLocaleTimeString(), 20, canvasHeight - 10);
+            // Add timestamp 50px below the image
+            ctx.fillStyle = "#7a5f43";
+            ctx.font = "20px monospace";
+            ctx.fillText(new Date().toLocaleTimeString(), 20, canvasHeight - 10);
 
-    // Convert canvas to image and display
-    const imgData = canvas.toDataURL('image/png');
-    polaroidContainer.innerHTML = `
-        <div class="polaroid">
-            <img src="${imgData}" alt="Captured Image">
-        </div>
-    `;
-    polaroidContainer.style.display = 'block';
+            // Convert canvas to image and display
+            const imgData = canvas.toDataURL('image/png');
+            polaroidContainer.innerHTML = `
+                <div class="polaroid">
+                    <img src="${imgData}" alt="Captured Image">
+                </div>
+            `;
+            polaroidContainer.style.display = 'block';
 
-    // Enable download button
-    downloadBtn.style.display = 'inline';
-    downloadBtn.onclick = function() {
-        const link = document.createElement('a');
-        link.href = imgData;
-        link.download = 'polaroid_image.png';
-        link.click();
-    };
-}
-
+            // Enable download button
+            downloadBtn.style.display = 'inline';
+            downloadBtn.onclick = function() {
+                const link = document.createElement('a');
+                link.href = imgData;
+                link.download = 'polaroid_image.png';
+                link.click();
+            };
+        }
 
         function flipCamera() {
             isMirrored = !isMirrored;
