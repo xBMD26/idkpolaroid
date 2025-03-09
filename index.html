@@ -14,7 +14,6 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            position: relative;
         }
         .container {
             display: flex;
@@ -33,18 +32,8 @@
             border-radius: 10px;
         }
         canvas { display: none; }
-        
-        /* Positioning Polaroid Preview Absolutely */
-        #polaroidContainer {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            display: none;
-        }
-        
         .polaroid {
+            position: relative;
             background: white;
             padding: 20px 20px 50px 20px;
             width: 300px;
@@ -59,7 +48,7 @@
         }
         .polaroid img {
             width: 100%;
-            height: auto;
+            height: 100%;
             object-fit: contain;
             border-radius: 5px;
         }
@@ -71,17 +60,11 @@
             color: #7a5f43;
             font-family: monospace;
         }
-
         .button-container {
             display: flex;
             flex-direction: column;
             gap: 10px;
             width: 100%;
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
         }
         button {
             padding: 10px;
@@ -91,8 +74,8 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            text-align: center;
             width: 100%;
-            max-width: 300px;
         }
         button:hover {
             background-color: #5a422f;
@@ -103,15 +86,14 @@
     <div class="container">
         <video id="camera" autoplay></video>
         <canvas id="canvas"></canvas>
-        <div id="polaroidContainer"></div>
+        <div class="button-container">
+            <button onclick="takePicture()">Capture</button>
+            <button id="download" style="display:none;">Download</button>
+            <button onclick="flipCamera()">Flip Camera</button>
+        </div>
+        <div id="polaroidContainer" style="display: none;"></div>
     </div>
     
-    <div class="button-container">
-        <button onclick="takePicture()">Capture</button>
-        <button id="download" style="display:none;">Download</button>
-        <button onclick="flipCamera()">Flip Camera</button>
-    </div>
-
     <script>
         const video = document.getElementById('camera');
         const canvas = document.getElementById('canvas');
