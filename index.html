@@ -33,12 +33,15 @@
             filter: sepia(60%) contrast(1.2) brightness(0.9); /* 90s Effect */
             border-radius: 10px;
         }
-        canvas { display: none; }
+        canvas { 
+            display: none;
+        }
         .polaroid {
             position: relative;
             background: white;
-            padding: 20px 20px 50px 20px;
-            width: 300px;
+            padding: 20px;
+            width: 100%;
+            max-width: 300px;
             aspect-ratio: 3 / 4;
             text-align: center;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
@@ -149,10 +152,9 @@
             const imgWidth = video.videoWidth;
             const imgHeight = video.videoHeight;
 
-            // Set canvas size to include Polaroid frame
-            const framePadding = 50;
+            // Set canvas size dynamically to prevent overflow
             const canvasWidth = imgWidth + 40;
-            const canvasHeight = imgHeight + framePadding + 50;
+            const canvasHeight = imgHeight + 50; // Adjusted for mobile responsiveness
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
 
