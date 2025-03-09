@@ -32,6 +32,8 @@
             aspect-ratio: 3 / 4;
             filter: sepia(60%) contrast(1.2) brightness(0.9); /* 90s Effect */
             border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 10px;
         }
         canvas { 
             display: none;
@@ -62,7 +64,7 @@
         .timestamp {
             position: absolute;
             bottom: 15px;
-            right: 20px;
+            left: 20px;
             font-size: 14px;
             color: #7a5f43;
             font-family: monospace;
@@ -183,7 +185,7 @@
             // Add timestamp
             ctx.fillStyle = "#7a5f43";
             ctx.font = "20px monospace";
-            ctx.fillText(new Date().toLocaleTimeString(), 20, canvasHeight - 20);
+            ctx.fillText(new Date().toLocaleTimeString(), 20, canvasHeight - 10);
 
             // Convert canvas to image and display
             const imgData = canvas.toDataURL('image/png');
